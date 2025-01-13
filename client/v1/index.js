@@ -1,8 +1,8 @@
 // Invoking strict mode
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
+'use strict';
 
-"use strict";
-console.log("🚀 This is it.");
+console.log('🚀 This is it.');
 
 const MY_FAVORITE_DEALERS = [
   {
@@ -161,10 +161,7 @@ const sortedByDate = Object.keys(communities).reduce((acc, community) => {
 }, {});
 
 // 2. Log the sort
-console.log(
-  "Deals sorted by date (old to recent) for each community:",
-  sortedByDate
-);
+
 
 /**
  * 🧥
@@ -531,9 +528,7 @@ sealedCamera = {
 };
 
 // 3. Update `camera` property with `favorite` to true WITHOUT changing sealedCamera properties
-camera.favorite = true;
-console.log("sealedCamera", sealedCamera);
-console.log("Camera", camera);
+
 
 // 🎯 TODO 11: Compute the profitability
 // From a specific deal called `deal`
@@ -547,22 +542,7 @@ const deal = {
 // 1. Compute the potential highest profitability based on the VINTED items
 // 2. Log the value
 
-// 2. Filtrer les articles dans VINTED qui contiennent le legoId dans le title et sont récents (moins de 3 semaines)
-const recentItems = VINTED.filter((item) => {
-  // Find if the logo id is in the tittle and if the deal is an old item
-  const isRecent = new Date(item.published) >= threeWeeksAgo; // 
-  const containsLegoId = item.title.includes(deal.legoId);
-  return containsLegoId && isRecent;
-});
 
-// 3. Rentability calculation
-const highestProfitability = recentItems.reduce((maxProfit, item) => {
-  const profitability = (deal.retail - parseFloat(item.price)) / deal.retail;
-  return profitability > maxProfit ? profitability : maxProfit;
-}, 0);
-
-// 4. Afficher la rentabilité la plus élevée
-console.log("Highest profitability:", highestProfitability);
 
 /**
  * 🎬
