@@ -1,7 +1,7 @@
 // Invoking strict mode
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
-"use strict";
 
+"use strict";
 console.log("🚀 This is it.");
 
 const MY_FAVORITE_DEALERS = [
@@ -29,6 +29,14 @@ console.log(MY_FAVORITE_DEALERS[0]);
 // 0. I have 2 favorite lego sets shopping communities stored in MY_FAVORITE_DEALERS variable
 // 1. Create a new variable and assign it the link of the lego set with the highest reduction I can find on these 2 websites
 // 2. Log the variable
+const bestDeal = {
+  name: "Avenue de la Brique",
+  url: "https://www.avenuedelabrique.com/lego-city/60339-l-arene-de-cascade-avec-double-looping/p8119",
+  reduction: 50 // Reduction in percentage
+};
+
+// 1. Log the best deal URL
+console.log("Best deal link:", bestDeal.url);
 
 /**
  * 🧱
@@ -42,29 +50,68 @@ console.log(MY_FAVORITE_DEALERS[0]);
 // 🎯 TODO 2: Number of deals
 // 1. Create a variable and assign it the number of deals
 // 2. Log the variable
+const numberOfDeals = deals.length;
+
+// 2. Log the variable
+console.log("Number of deals:", numberOfDeals);
+console.log(deals[0]);
 
 // 🎯 TODO 3: Website name
 // 1. Create a variable and assign it the list of shopping community name only
 // 2. Log the variable
 // 3. Log how many shopping communities we have
+const communityNames = deals.map(deal => deal.community);
+console.log("Shopping communities:", communityNames);
+
+const numberOfCommunities = new Set(communityNames).size; 
+console.log("Number of unique shopping communities:", numberOfCommunities);
 
 // 🎯 TODO 4: Sort by price
 // 1. Create a function to sort the deals by price
 // 2. Create a variable and assign it the list of sets by price from lowest to highest
 // 3. Log the variable
+function sortDealsByPrice(deals) {
+  return deals.sort((a, b) => a.price - b.price);
+}
+
+// 2. Create a variable and assign it the list of sets by price from lowest to highest
+const sortedDeals = sortDealsByPrice([...deals]); // Utilisation de [...deals] pour éviter de modifier l'original
+
+// 3. Log the variable
+console.log("Deals sorted by price (lowest to highest):", sortedDeals);
 
 // 🎯 TODO 5: Sort by date
 // 1. Create a function to sort the deals by date
 // 2. Create a variable and assign it the list of deals by date from recent to old
 // 3. Log the variable
+function sortDealsByDate(deals) {
+  return deals.sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri des dates récentes vers les plus anciennes
+}
+
+// 2. Create a variable and assign it the list of deals by date from recent to old
+const sortedDealsByDate = sortDealsByDate([...deals]); // Copie pour ne pas modifier l'original
+
+// 3. Log the variable
+console.log("Deals sorted by date (recent to old):", sortedDealsByDate);
 
 // 🎯 TODO 6: Filter a specific percentage discount range
 // 1. Filter the list of deals between 50% and 75%
 // 2. Log the list
+// 1. Filter the list of deals between 50% and 75%
+const filteredDeals = deals.filter(deal => deal.discount >= 50 && deal.discount <= 75);
+
+// 2. Log the list
+console.log("Deals with reduction between 50% and 75%:", filteredDeals);
 
 // 🎯 TODO 7: Average percentage discount
 // 1. Determine the average percentage discount of the deals
 // 2. Log the average
+const totalReduction = deals.reduce((sum, deal) => sum + deal.discount, 0);
+const averageReduction = totalReduction / deals.length;
+
+// 2. Log the average
+console.log("Average percentage discount:", averageReduction.toFixed(2) + "%");
+
 
 /**
  * 🏎
