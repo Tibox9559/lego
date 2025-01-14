@@ -1,8 +1,8 @@
 // Invoking strict mode
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
-'use strict';
+"use strict";
 
-console.log('🚀 This is it.');
+console.log("🚀 This is it.");
 
 const MY_FAVORITE_DEALERS = [
   {
@@ -34,7 +34,6 @@ const bestDeal = {
   reduction: 50, // Reduction in percentage
 };
 // 2. Log the variable
-console.log("Best deal link:", bestDeal.url);
 
 /**
  * 🧱
@@ -49,8 +48,6 @@ console.log("Best deal link:", bestDeal.url);
 // 1. Create a variable and assign it the number of deals
 const numberOfDeals = deals.length;
 // 2. Log the variable
-console.log("Number of deals:", numberOfDeals);
-console.log(deals[0]);
 
 // 🎯 TODO 3: Website name
 // 1. Create a variable and assign it the list of shopping community name only
@@ -58,8 +55,6 @@ const communityNames = deals.map((deal) => deal.community);
 // 2. Log the variable
 console.log("Shopping communities:", communityNames);
 // 3. Log how many shopping communities we have
-const numberOfCommunities = new Set(communityNames).size;
-console.log("Number of unique shopping communities:", numberOfCommunities);
 
 // 🎯 TODO 4: Sort by price
 // 1. Create a function to sort the deals by price
@@ -69,7 +64,6 @@ function sortDealsByPrice(deals) {
 // 2. Create a variable and assign it the list of sets by price from lowest to highest
 const sortedDeals = sortDealsByPrice([...deals]); // Copy "[...deals] to avoid any change in the original"
 // 3. Log the variable
-console.log("Deals sorted by price (lowest to highest):", sortedDeals);
 
 // 🎯 TODO 5: Sort by date
 // 1. Create a function to sort the deals by date
@@ -79,7 +73,6 @@ function sortDealsByDate(deals) {
 // 2. Create a variable and assign it the list of deals by date from recent to old
 const sortedDealsByDate = sortDealsByDate([...deals]); // 
 // 3. Log the variable
-console.log("Deals sorted by date (recent to old):", sortedDealsByDate);
 
 // 🎯 TODO 6: Filter a specific percentage discount range
 // 1. Filter the list of deals between 50% and 75%
@@ -87,7 +80,6 @@ const filteredDeals = deals.filter(
   (deal) => deal.discount >= 50 && deal.discount <= 75
 );
 // 2. Log the list
-console.log("Deals with reduction between 50% and 75%:", filteredDeals);
 
 // 🎯 TODO 7: Average percentage discount
 // 1. Determine the average percentage discount of the deals
@@ -95,7 +87,6 @@ const totalReduction = deals.reduce((sum, deal) => sum + deal.discount, 0);
 const averageReduction = totalReduction / deals.length;
 
 // 2. Log the average
-console.log("Average percentage discount:", averageReduction.toFixed(2) + "%");
 
 /**
  * 🏎
