@@ -1,5 +1,5 @@
 // Invoking strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
-'use strict';
+"use strict";
 
 /**
 Description of the available api
@@ -26,18 +26,18 @@ let currentDeals = [];
 let currentPagination = {};
 
 // instantiate the selectors
-const selectShow = document.querySelector('#show-select');
-const selectPage = document.querySelector('#page-select');
-const selectLegoSetIds = document.querySelector('#lego-set-id-select');
-const sectionDeals= document.querySelector('#deals');
-const spanNbDeals = document.querySelector('#nbDeals');
+const selectShow = document.querySelector("#show-select");
+const selectPage = document.querySelector("#page-select");
+const selectLegoSetIds = document.querySelector("#lego-set-id-select");
+const sectionDeals = document.querySelector("#deals");
+const spanNbDeals = document.querySelector("#nbDeals");
 
 /**
  * Set global value
  * @param {Array} result - deals to display
  * @param {Object} meta - pagination meta info
  */
-const setCurrentDeals = ({result, meta}) => {
+const setCurrentDeals = ({ result, meta }) => {
   currentDeals = result;
   currentPagination = meta;
 };
@@ -57,13 +57,13 @@ const fetchDeals = async (page = 1, size = 6) => {
 
     if (body.success !== true) {
       console.error(body);
-      return {currentDeals, currentPagination};
+      return { currentDeals, currentPagination };
     }
 
     return body.data;
   } catch (error) {
     console.error(error);
-    return {currentDeals, currentPagination};
+    return { currentDeals, currentPagination };
   }
 };
 
@@ -71,37 +71,37 @@ const fetchDeals = async (page = 1, size = 6) => {
  * Render list of deals
  * @param  {Array} deals
  */
-const renderDeals = deals => {
-  const fragment = document.createDocumentFragment();
-  const div = document.createElement('div');
-  const template = deals
-    .map(deal => {
-      return `
-      <div class="deal" id=${deal.uuid}>
-        <span>${deal.id}</span>
-        <a href="${deal.link}">${deal.title}</a>
-        <span>${deal.price}</span>
+const renderDeals = (deals) => {
+  sectionDeals.innerHTML = deals
+    .map(
+      (deal) => `
+      <div class="card">
+        <img src="logo.png" alt="Lego Set Image"/>
+        <div class="card-content">
+          <h3>${deal.title}</h3>
+          <p>${deal.description || "No description available."}</p>
+          <p><strong>${deal.price} €</strong></p>
+          <button onclick="window.open('${
+            deal.link
+          }', '_blank')">View Deal</button>
+        </div>
       </div>
-    `;
-    })
-    .join('');
-
-  div.innerHTML = template;
-  fragment.appendChild(div);
-  sectionDeals.innerHTML = '<h2>Deals</h2>';
-  sectionDeals.appendChild(fragment);
+    `
+    )
+    .join("");
+    
 };
 
 /**
  * Render page selector
  * @param  {Object} pagination
  */
-const renderPagination = pagination => {
-  const {currentPage, pageCount} = pagination;
+const renderPagination = (pagination) => {
+  const { currentPage, pageCount } = pagination;
   const options = Array.from(
-    {'length': pageCount},
+    { length: pageCount },
     (value, index) => `<option value="${index + 1}">${index + 1}</option>`
-  ).join('');
+  ).join("");
 
   selectPage.innerHTML = options;
   selectPage.selectedIndex = currentPage - 1;
@@ -111,11 +111,11 @@ const renderPagination = pagination => {
  * Render lego set ids selector
  * @param  {Array} lego set ids
  */
-const renderLegoSetIds = deals => {
+const renderLegoSetIds = (deals) => {
   const ids = getIdsFromDeals(deals);
-  const options = ids.map(id => 
-    `<option value="${id}">${id}</option>`
-  ).join('');
+  const options = ids
+    .map((id) => `<option value="${id}">${id}</option>`)
+    .join("");
 
   selectLegoSetIds.innerHTML = options;
 };
@@ -124,8 +124,8 @@ const renderLegoSetIds = deals => {
  * Render page selector
  * @param  {Object} pagination
  */
-const renderIndicators = pagination => {
-  const {count} = pagination;
+const renderIndicators = (pagination) => {
+  const { count } = pagination;
 
   spanNbDeals.innerHTML = count;
 };
@@ -144,14 +144,31 @@ const render = (deals, pagination) => {
 /**
  * Select the number of deals to display
  */
-selectShow.addEventListener('change', async (event) => {
-  const deals = await fetchDeals(currentPagination.currentPage, parseInt(event.target.value));
+selectShow.addEventListener("change", async (event) => {
+  const deals = await fetchDeals(
+    currentPagination.currentPage,
+    parseInt(event.target.value)
+  );
 
   setCurrentDeals(deals);
   render(currentDeals, currentPagination);
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
+/**
+ * Change page on "Go to page"
+ */
+selectPage.addEventListener("change", async (event) => {
+  const selectedPage = parseInt(event.target.value);
+  const deals = await fetchDeals(selectedPage, parseInt(selectShow.value));
+
+  setCurrentDeals(deals);
+  render(currentDeals, currentPagination);
+});
+
+/**
+ * Initial load
+ */
+document.addEventListener("DOMContentLoaded", async () => {
   const deals = await fetchDeals();
 
   setCurrentDeals(deals);
