@@ -31,7 +31,10 @@ const selectPage = document.querySelector("#page-select");
 const selectLegoSetIds = document.querySelector("#lego-set-id-select");
 const sectionDeals = document.querySelector("#deals");
 const spanNbDeals = document.querySelector("#nbDeals");
-
+const selectSort = document.querySelector("#sort-select");
+const discountFilterCheckbox = document.querySelector("#discount-filter");
+const commentedFilterCheckbox = document.querySelector("#commented-filter");
+const temperatureFilterCheckbox = document.querySelector("#temperature-filter");
 /**
  * Set global value
  * @param {Array} result - deals to display
@@ -59,7 +62,7 @@ const fetchDeals = async (page = 1, size = 6) => {
       console.error(body);
       return { currentDeals, currentPagination };
     }
-
+console.log(body.data);
     return body.data;
   } catch (error) {
     console.error(error);
@@ -111,14 +114,15 @@ const renderPagination = (pagination) => {
  * Render lego set ids selector
  * @param  {Array} lego set ids
  */
-const renderLegoSetIds = (deals) => {
+const renderLegoSetIds = deals => {
   const ids = getIdsFromDeals(deals);
-  const options = ids
-    .map((id) => `<option value="${id}">${id}</option>`)
-    .join("");
+  const options = ids.map(id => 
+    `<option value="${id}">${id}</option>`
+  ).join('');
 
   selectLegoSetIds.innerHTML = options;
 };
+
 
 /**
  * Render page selector
@@ -130,12 +134,15 @@ const renderIndicators = (pagination) => {
   spanNbDeals.innerHTML = count;
 };
 
+
 const render = (deals, pagination) => {
   renderDeals(deals);
   renderPagination(pagination);
   renderIndicators(pagination);
   renderLegoSetIds(deals)
+  console.log("Deals affichés après filtres et tri:", deals);
 };
+
 
 /**
  * Declaration of all Listeners
@@ -165,6 +172,45 @@ selectPage.addEventListener("change", async (event) => {
   render(currentDeals, currentPagination);
 });
 
+// Listen for changes in the sort selector
+
+selectSort.addEventListener("change", (event) => {
+  const selectedSort = event.target.value; // Get selected value
+  let filteredDeals = applyFilters([...currentDeals]); // Apply active filters first
+  let sortedDeals;
+
+  if (selectedSort === "price-asc") {
+    sortedDeals = sortDealsByPrice(filteredDeals, "asc"); // Sort ascending by price
+  } else if (selectedSort === "price-desc") {
+    sortedDeals = sortDealsByPrice(filteredDeals, "desc"); // Sort descending by price
+  } else if (selectedSort === "date-asc") {
+    sortedDeals = sortDealsByDate(filteredDeals, "asc"); // Sort ascending by date
+  } else if (selectedSort === "date-desc") {
+    sortedDeals = sortDealsByDate(filteredDeals, "desc"); // Sort descending by date
+  } else {
+    sortedDeals = filteredDeals; // Default: no sorting
+  }
+
+  // Render sorted and filtered deals without changing pagination
+  render(sortedDeals, currentPagination);
+});
+
+discountFilterCheckbox.addEventListener("change", () => {
+  const filteredDeals = applyFilters([...currentDeals]);
+  render(filteredDeals, currentPagination);
+});
+
+// Listen for changes in the commented filter checkbox
+commentedFilterCheckbox.addEventListener("change", () => {
+  const filteredDeals = applyFilters([...currentDeals]);
+  render(filteredDeals, currentPagination);
+});
+
+temperatureFilterCheckbox.addEventListener("change", () => {
+  const filteredDeals = applyFilters([...currentDeals]);
+  render(filteredDeals, currentPagination);
+});
+
 /**
  * Initial load
  */
@@ -174,3 +220,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   setCurrentDeals(deals);
   render(currentDeals, currentPagination);
 });
+/**
+ * Apply all active filters to the deals
+ * @param {Array} deals - list of deals
+ * @return {Array} - filtered deals
+ */
