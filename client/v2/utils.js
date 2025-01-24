@@ -76,3 +76,30 @@ const applyFilters = (deals) => {
 
   return filteredDeals;
 };
+/**
+ * Calculate average, p5, p25, and p50 price indicators
+ * @param {Array} sales - List of sales, each with a `price` property
+ * @returns {Object} - Object with `average`, `p5`, `p25`, and `p50` indicators
+ */
+const calculatePriceIndicators = (sales) => {
+  if (!sales || sales.length === 0) {
+    return { average: 0, p5: 0, p25: 0, p50: 0 };
+  }
+
+  const prices = sales
+    .map((sale) => parseFloat(sale.price)) // S'assurer que les prix sont des nombres
+    .filter((price) => !isNaN(price)) // Supprimer les valeurs non numériques
+    .sort((a, b) => a - b); // Trier les prix en ordre croissant
+
+  if (prices.length === 0) {
+    return { average: 0, p5: 0, p25: 0, p50: 0 };
+  }
+
+  const average = prices.reduce((sum, price) => sum + price, 0) / prices.length;
+  const p5 = prices[Math.floor((5 / 100) * prices.length)];
+  const p25 = prices[Math.floor((25 / 100) * prices.length)];
+  const p50 = prices[Math.floor((50 / 100) * prices.length)];
+
+  return { average, p5, p25, p50 };
+};
+
