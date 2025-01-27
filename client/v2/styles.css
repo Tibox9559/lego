@@ -121,7 +121,7 @@ section {
   background-color: goldenrod;
   transform: scale(0.95);
 }
-.remove-btn {
+#favorites .remove-btn {
   background-color: red;
   color: white;
   border: none;
@@ -132,12 +132,12 @@ section {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.remove-btn:hover {
+#favorites .remove-btn:hover {
   background-color: darkred;
   transform: scale(1.05);
 }
 
-.remove-btn:active {
+#favorites .remove-btn:active {
   background-color: crimson;
   transform: scale(0.95);
 }
