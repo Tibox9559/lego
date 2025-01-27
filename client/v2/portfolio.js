@@ -39,6 +39,7 @@ const commentedFilterCheckbox = document.querySelector("#commented-filter");
 const temperatureFilterCheckbox = document.querySelector("#temperature-filter");
 const sectionFavorites = document.querySelector("#favorite-deals");
 const sectionSales = document.querySelector("#sales");
+const dealprice=document.querySelector("#dealprice");
 /**
  * Set global value
  * @param {Array} result - deals to display
@@ -58,10 +59,13 @@ const renderDeals = (deals) => {
     .map(
       (deal, index) => `
       <div class="card" data-index="${index}">
-        <img src="logo.png" alt="Lego Set Image"/>
+        <img src="${deal.photo}" alt="Lego Set Image"/>
         <div class="card-content">
           <h3>${deal.title}</h3>
-          <p>${deal.description || "No description available."}</p>
+          <p>Temperature : ${
+            deal.temperature || "No temperature available."
+          }</p>
+          <p>Comments : ${deal.comments || "No comments available."}</p>
           <p><strong>${deal.price} €</strong></p>
           <button onclick="window.open('${
             deal.link
@@ -82,7 +86,7 @@ const renderFavorites = () => {
       .map(
         (deal) => `
         <div class="card">
-          <img src="logo.png" alt="Lego Set Image"/>
+          <img src=${deal.photo}" alt="Lego Set Image"/>
           <div class="card-content">
             <h3>${deal.title}</h3>
             <p>${deal.description || "No description available."}</p>
@@ -228,7 +232,9 @@ const renderPriceIndicators = (sales) => {
 };
 selectLegoSetIds.addEventListener("change", async (event) => {
   const selectedId = event.target.value; // Récupérer l'ID sélectionné
-  const sales = await fetchSales(selectedId); // Récupérer les ventes pour cet ID
+  const sales = await fetchSales(selectedId);
+ 
+   // Récupérer les ventes pour cet ID
   if (sales) {
     renderSales(sales); // Afficher les ventes
     renderPriceIndicators(sales); // Mettre à jour les indicateurs de prix
@@ -266,21 +272,29 @@ const renderSales = (sales) => {
     .join("");
 };
 
-// Load favorites on page load
 document.addEventListener("DOMContentLoaded", async () => {
-  favoriteDeals = loadFavoritesFromLocalStorage(); // Load favorites from localStorage
-  renderFavorites(); // Render favorites
+  favoriteDeals = loadFavoritesFromLocalStorage(); // Charger les favoris
+  renderFavorites(); // Afficher les favoris
 
-  // Fetch and render deals
+  // Fetch et afficher les deals
   const deals = await fetchDeals();
   setCurrentDeals(deals);
   render(currentDeals, currentPagination);
 
-  // Initialize sales and price indicators if applicable
+  // Initialiser le sélecteur d'IDs Lego
   if (selectLegoSetIds.options.length > 0) {
-    const firstId = selectLegoSetIds.options[0].value;
-    selectLegoSetIds.value = firstId;
+    const firstId = selectLegoSetIds.options[0].value; // Obtenir le premier ID
+    selectLegoSetIds.value = firstId; // Sélectionner le premier ID par défaut
 
+    // Afficher le prix correspondant au premier ID
+    const matchingDeal = currentDeals.find((deal) => deal.id === firstId);
+    if (matchingDeal) {
+      dealprice.textContent = `${matchingDeal.price} €`;
+    } else {
+      dealprice.textContent = "No deal found for the default ID";
+    }
+
+    // Initialiser les ventes et les indicateurs de prix pour le premier ID
     const sales = await fetchSales(firstId);
     if (sales) {
       renderSales(sales);
@@ -288,5 +302,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       sectionSales.innerHTML = "<p>No sales data available</p>";
     }
+  }
+});
+
+selectLegoSetIds.addEventListener("change", async (event) => {
+  const selectedId = event.target.value; // Récupérer l'ID sélectionné
+
+  // Trouver le deal correspondant dans la liste des deals actuels
+  const matchingDeal = currentDeals.find((deal) => deal.id === selectedId);
+
+  if (matchingDeal) {
+    // Afficher le prix dans l'élément HTML avec l'ID #dealprice
+    dealprice.textContent = `${matchingDeal.price} €`;
+  } else {
+    // Si aucun deal ne correspond, afficher un message d'erreur
+    dealprice.textContent = "Deal not found";
   }
 });

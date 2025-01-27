@@ -8,7 +8,12 @@
   </head>
   <body>
     <h1>Lego</h1>
+    
     <section id="options">
+      <div>
+        <span>Number of deals</span>
+        <span id="nbDeals">0</span>
+      </div>
       <div id="show">
         <label for="show-select">Show:</label>
         <select name="show" id="show-select">
@@ -65,10 +70,7 @@
     </section>
     <section id="price-indicators">
     <h3>Price Indicators</h3>
-      <div>
-        <span>Number of deals</span>
-        <span id="nbDeals">0</span>
-      </div>
+      <p>Price on dealabs: <span id="dealprice">N/A</span></p>
       <p>Average Price: <span id="average-price">N/A</span></p>
       <p>5th Percentile (P5): <span id="p5-price">N/A</span></p>
       <p>25th Percentile (P25): <span id="p25-price">N/A</span></p>
