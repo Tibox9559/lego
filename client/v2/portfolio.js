@@ -37,6 +37,8 @@ const selectSort = document.querySelector("#sort-select");
 const discountFilterCheckbox = document.querySelector("#discount-filter");
 const commentedFilterCheckbox = document.querySelector("#commented-filter");
 const temperatureFilterCheckbox = document.querySelector("#temperature-filter");
+const sectionFavorites = document.querySelector("#favorite-deals");
+const sectionSales = document.querySelector("#sales");
 /**
  * Set global value
  * @param {Array} result - deals to display
@@ -48,42 +50,14 @@ const setCurrentDeals = ({ result, meta }) => {
 };
 
 /**
- * Fetch deals from api
- * @param  {Number}  [page=1] - current page to fetch
- * @param  {Number}  [size=12] - size of the page
- * @return {Object}
- */
-const fetchDeals = async (page = 1, size = 6) => {
-  try {
-    const response = await fetch(
-      `https://lego-api-blue.vercel.app/deals?page=${page}&size=${size}`
-    );
-    const body = await response.json();
-
-    if (body.success !== true) {
-      console.error(body);
-      return { currentDeals, currentPagination };
-      
-    }
-    
-    return body.data;
-
-  } catch (error) {
-    console.error(error);
-    return { currentDeals, currentPagination };
-  }
-};
-
-
-/**
  * Render list of deals
  * @param  {Array} deals
  */
 const renderDeals = (deals) => {
   sectionDeals.innerHTML = deals
     .map(
-      (deal) => `
-      <div class="card">
+      (deal, index) => `
+      <div class="card" data-index="${index}">
         <img src="logo.png" alt="Lego Set Image"/>
         <div class="card-content">
           <h3>${deal.title}</h3>
@@ -92,12 +66,39 @@ const renderDeals = (deals) => {
           <button onclick="window.open('${
             deal.link
           }', '_blank')">View Deal</button>
+          <button class="favorite-btn" onclick="addToFavorites(${index})">★ Add to Favorites</button>
         </div>
       </div>
     `
     )
     .join("");
-    
+};
+
+const renderFavorites = () => {
+  if (favoriteDeals.length === 0) {
+    sectionFavorites.innerHTML = "<p>No favorite deals yet.</p>";
+  } else {
+    sectionFavorites.innerHTML = favoriteDeals
+      .map(
+        (deal) => `
+        <div class="card">
+          <img src="logo.png" alt="Lego Set Image"/>
+          <div class="card-content">
+            <h3>${deal.title}</h3>
+            <p>${deal.description || "No description available."}</p>
+            <p><strong>${deal.price} €</strong></p>
+            <button onclick="window.open('${
+              deal.link
+            }', '_blank')">View Deal</button>
+            <button class="remove-btn" onclick="removeFromFavorites('${
+              deal.id
+            }')">Remove</button>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+  }
 };
 
 /**
@@ -119,15 +120,14 @@ const renderPagination = (pagination) => {
  * Render lego set ids selector
  * @param  {Array} lego set ids
  */
-const renderLegoSetIds = deals => {
+const renderLegoSetIds = (deals) => {
   const ids = getIdsFromDeals(deals);
-  const options = ids.map(id => 
-    `<option value="${id}">${id}</option>`
-  ).join('');
+  const options = ids
+    .map((id) => `<option value="${id}">${id}</option>`)
+    .join("");
 
   selectLegoSetIds.innerHTML = options;
 };
-
 
 /**
  * Render page selector
@@ -139,15 +139,12 @@ const renderIndicators = (pagination) => {
   spanNbDeals.innerHTML = count;
 };
 
-
 const render = (deals, pagination) => {
   renderDeals(deals);
   renderPagination(pagination);
   renderIndicators(pagination);
-  renderLegoSetIds(deals)
-  
+  renderLegoSetIds(deals);
 };
-
 
 /**
  * Declaration of all Listeners
@@ -219,78 +216,12 @@ temperatureFilterCheckbox.addEventListener("change", () => {
 /**
  * Initial load
  */
-
-const sectionSales = document.querySelector("#sales"); 
-
-const fetchSales = async (id = 42182) => {
-  try {
-    const response = await fetch(
-      `https://lego-api-blue.vercel.app/sales?id=${id}`
-    );
-    const vinted = await response.json();
-
-    if (vinted.success !== true) {
-      console.error("Error response from API:", body);
-      return null; // Retourne null en cas d'erreur
-    }
-    console.log(vinted.data.result);
-    return vinted.data.result; // Retourne les données en cas de succès
-    
-  } catch (error) {
-    console.error("Error fetching sales data:", error);
-    return null; // Retourne null en cas d'erreur réseau ou autre
-  }
-};
-const renderSales = (sales) => {
-  // Générer le contenu HTML pour chaque vente
-  sectionSales.innerHTML = sales
-    .map((sale) => {
-      // Calculer la différence en jours entre aujourd'hui et la date de publication
-      const publishedDate = new Date(sale.published);
-      const currentDate = new Date();
-      const differenceInTime = currentDate - publishedDate;
-      const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));
-
-      return `
-        <div class="card">
-          <img src="${sale.image || 'Vinted_logo.png'}" alt="Lego Set Image"/>
-          <div class="card-content">
-            <h3>${sale.title}</h3>
-            <p>Published ${differenceInDays} days ago</p>
-            <p><strong>${sale.price} €</strong></p>
-            <button onclick="window.open('${sale.link}', '_blank')">View Sale</button>
-          </div>
-        </div>
-      `;
-    })
-    .join("");
-};
-
-document.addEventListener("DOMContentLoaded", async () => {
-  // Récupérer les deals et initialiser la liste
-  const deals = await fetchDeals();
-  setCurrentDeals(deals);
-  render(currentDeals, currentPagination);
-
-  // Si la liste déroulante des IDs contient des options
-  if (selectLegoSetIds.options.length > 0) {
-    const firstId = selectLegoSetIds.options[0].value; // Récupérer le premier ID
-    selectLegoSetIds.value = firstId; // Sélectionner le premier ID dans la liste
-
-    const sales = await fetchSales(firstId); // Récupérer les ventes pour cet ID
-    if (sales) {
-      renderSales(sales); // Afficher les ventes
-      renderPriceIndicators(sales); // Mettre à jour les indicateurs de prix
-    } else {
-      sectionSales.innerHTML = "<p>No sales data available</p>";
-    }
-  }
-});
 const renderPriceIndicators = (sales) => {
   const { average, p5, p25, p50 } = calculatePriceIndicators(sales);
 
   // Mettre à jour les valeurs dans le DOM
-  document.querySelector("#average-price").textContent = average.toFixed(2) + " €";
+  document.querySelector("#average-price").textContent =
+    average.toFixed(2) + " €";
   document.querySelector("#p5-price").textContent = p5.toFixed(2) + " €";
   document.querySelector("#p25-price").textContent = p25.toFixed(2) + " €";
   document.querySelector("#p50-price").textContent = p50.toFixed(2) + " €";
@@ -303,5 +234,59 @@ selectLegoSetIds.addEventListener("change", async (event) => {
     renderPriceIndicators(sales); // Mettre à jour les indicateurs de prix
   } else {
     sectionSales.innerHTML = "<p>No sales data available</p>"; // Afficher un message si aucune donnée
+  }
+});
+
+const renderSales = (sales) => {
+  // Générer le contenu HTML pour chaque vente
+  sectionSales.innerHTML = sales
+    .map((sale) => {
+      // Calculer la différence en jours entre aujourd'hui et la date de publication
+      const publishedDate = new Date(sale.published);
+      const currentDate = new Date();
+      const differenceInTime = currentDate - publishedDate;
+      const differenceInDays = Math.floor(
+        differenceInTime / (1000 * 60 * 60 * 24)
+      );
+
+      return `
+        <div class="card">
+          <img src="${sale.image || "Vinted_logo.png"}" alt="Lego Set Image"/>
+          <div class="card-content">
+            <h3>${sale.title}</h3>
+            <p>Published ${differenceInDays} days ago</p>
+            <p><strong>${sale.price} €</strong></p>
+            <button onclick="window.open('${
+              sale.link
+            }', '_blank')">View Sale</button>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+};
+
+// Load favorites on page load
+document.addEventListener("DOMContentLoaded", async () => {
+  favoriteDeals = loadFavoritesFromLocalStorage(); // Load favorites from localStorage
+  renderFavorites(); // Render favorites
+
+  // Fetch and render deals
+  const deals = await fetchDeals();
+  setCurrentDeals(deals);
+  render(currentDeals, currentPagination);
+
+  // Initialize sales and price indicators if applicable
+  if (selectLegoSetIds.options.length > 0) {
+    const firstId = selectLegoSetIds.options[0].value;
+    selectLegoSetIds.value = firstId;
+
+    const sales = await fetchSales(firstId);
+    if (sales) {
+      renderSales(sales);
+      renderPriceIndicators(sales);
+    } else {
+      sectionSales.innerHTML = "<p>No sales data available</p>";
+    }
   }
 });

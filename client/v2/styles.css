@@ -101,3 +101,44 @@ section {
 #filters input[type="checkbox"]:checked {
   outline: 2px solid green; /* Optional outline for checked state */
 }
+#deals .favorite-btn {
+  background-color: rgb(223, 189, 0);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#deals .favorite-btn:hover {
+  background-color: darkgoldenrod;
+  transform: scale(1.05);
+}
+
+#deals .favorite-btn:active {
+  background-color: goldenrod;
+  transform: scale(0.95);
+}
+.remove-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.remove-btn:hover {
+  background-color: darkred;
+  transform: scale(1.05);
+}
+
+.remove-btn:active {
+  background-color: crimson;
+  transform: scale(0.95);
+}
+
