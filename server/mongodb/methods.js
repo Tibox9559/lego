@@ -1,4 +1,4 @@
-const connectDB = require("../mongo"); // Importer la connexion MongoDB
+const connectDB = require("./mongo"); // Importer la connexion MongoDB
 
 // 1️⃣ Trouver les meilleures réductions
 const getBestDiscountDeals = async (req, res) => {
@@ -6,7 +6,7 @@ const getBestDiscountDeals = async (req, res) => {
         const db = await connectDB();
         const deals = await db.collection("deals").find().sort({ discount: -1 }).limit(10).toArray();
         
-        console.log("🛒 Meilleures offres trouvées :", deals); // Ajout du console.log
+        
 
         res.json(deals);
     } catch (error) {
