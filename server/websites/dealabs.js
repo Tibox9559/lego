@@ -23,6 +23,15 @@ async function scrapePage(page) {
                     const deal = JSON.parse(jsonData);
                     if (deal.props && deal.props.thread) {
                         const thread = deal.props.thread;
+                        const price = thread.price;
+                        const nextBestPrice = thread.nextBestPrice;
+                        let discount = null;
+                        
+                        if (price && nextBestPrice && nextBestPrice > price) {
+                            discount = ((nextBestPrice - price) / nextBestPrice) * 100;
+                            discount = Math.round(discount * 100) / 100; // Arrondi à deux décimales
+                        }
+                        
                         deals.push({
                             threadId: thread.threadId,
                             titleSlug: thread.titleSlug,
@@ -32,8 +41,9 @@ async function scrapePage(page) {
                             publishedAt: thread.publishedAt,
                             link: thread.link,
                             merchantName: thread.merchant ? thread.merchant.merchantName : null,
-                            price: thread.price,
-                            nextBestPrice: thread.nextBestPrice
+                            price: price,
+                            nextBestPrice: nextBestPrice,
+                            discount: discount
                         });
                     }
                 } catch (error) {
