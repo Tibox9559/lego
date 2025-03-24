@@ -26,47 +26,59 @@ async function scrapePage(page) {
                         const price = thread.price;
                         const nextBestPrice = thread.nextBestPrice;
                         let discount = null;
-                        
+
                         if (price && nextBestPrice && nextBestPrice > price) {
                             discount = ((nextBestPrice - price) / nextBestPrice) * 100;
-                            discount = Math.round(discount * 100) / 100; // Arrondi à deux décimales
+                            discount = Math.round(discount * 100) / 100; // Arrondi à 2 décimales
                         }
-                        
-                        deals.push({
-                            threadId: thread.threadId,
-                            titleSlug: thread.titleSlug,
-                            commentCount: thread.commentCount,
-                            isExpired: thread.isExpired,
-                            temperature: thread.temperature,
-                            publishedAt: thread.publishedAt,
-                            link: thread.link,
-                            merchantName: thread.merchant ? thread.merchant.merchantName : null,
-                            price: price,
-                            nextBestPrice: nextBestPrice,
-                            discount: discount
-                        });
+
+                        // Extraction de l'ID à partir de titleSlug
+                        const titleSlug = thread.titleSlug;
+                        const idMatch = titleSlug.match(/\b\d{5}\b/);
+                        const id = idMatch ? idMatch[0] : null;
+
+                        if (id) {
+                            deals.push({
+                                id: id,
+                                threadId: thread.threadId,
+                                titleSlug: titleSlug,
+                                commentCount: thread.commentCount,
+                                isExpired: thread.isExpired,
+                                temperature: thread.temperature,
+                                publishedAt: thread.publishedAt,
+                                link: thread.link,
+                                merchantName: thread.merchant ? thread.merchant.merchantName : null,
+                                price: price,
+                                nextBestPrice: nextBestPrice,
+                                discount: discount
+                            });
+                        }
                     }
                 } catch (error) {
-                    console.error('Erreur de parsing JSON:', error);
+                    console.error('❌ Erreur de parsing JSON:', error);
                 }
             }
         });
+
+        console.log(`✅ Page ${page} scrappée: ${deals.length} offres valides trouvées.`);
         return deals;
     } catch (error) {
-        console.error(`Erreur lors du scraping de la page ${page}:`, error);
+        console.error(`❌ Erreur lors du scraping de la page ${page}:`, error.message);
         return [];
     }
 }
 
 async function scrapeAllPages() {
     let allDeals = [];
+
     for (let page = 1; page <= totalPages; page++) {
-        console.log(`Scraping page ${page}...`);
+        console.log(`🔍 Scraping de la page ${page}...`);
         const deals = await scrapePage(page);
-        allDeals = allDeals.concat(deals);
+        allDeals.push(...deals);
     }
+
     fs.writeFileSync('deals.json', JSON.stringify(allDeals, null, 2));
-    console.log('Scraping terminé, données enregistrées dans deals.json');
+    console.log(`✅ Scraping terminé, ${allDeals.length} offres enregistrées dans deals.json.`);
 }
 
 scrapeAllPages();
