@@ -9,7 +9,7 @@ const {
   getDealsSortedByPrice,
   getDealsSortedByDate,
   getSalesForLegoSet,
-  getRecentSales,
+  
 } = require("./mongodb/methods"); // Import des méthodes
 const connectDB = require("./mongodb/mongo"); // Importer la connexion MongoDB
 const PORT = 8092;
@@ -32,7 +32,7 @@ app.get("/api/most-commented", getMostCommentedDeals);
 app.get("/api/deals-by-price", getDealsSortedByPrice);
 app.get("/api/deals-by-date", getDealsSortedByDate);
 app.get("/api/sales/:legoSetId", getSalesForLegoSet);
-app.get("/api/recent-sales", getRecentSales);
+
 
 // Lancer le serveur
 app.listen(PORT, async () => {

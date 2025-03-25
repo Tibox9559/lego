@@ -4,7 +4,7 @@ const connectDB = require("./mongo"); // Importer la connexion MongoDB
 const getBestDiscountDeals = async (req, res) => {
     try {
         const db = await connectDB();
-        const deals = await db.collection("deals").find().sort({ discount: -1 }).limit(10).toArray();
+        const deals = await db.collection("deals").find().sort({ discount: -1 }).toArray();
         
         
 
@@ -19,7 +19,7 @@ const getBestDiscountDeals = async (req, res) => {
 const getMostCommentedDeals = async (req, res) => {
     try {
         const db = await connectDB();
-        const deals = await db.collection("deals").find().sort({ comments: -1 }).limit(10).toArray();
+        const deals = await db.collection("deals").find().sort({ commentCount: -1 }).toArray();
         res.json(deals);
     } catch (error) {
         console.error("❌ Erreur:", error);
@@ -43,7 +43,11 @@ const getDealsSortedByPrice = async (req, res) => {
 const getDealsSortedByDate = async (req, res) => {
     try {
         const db = await connectDB();
-        const deals = await db.collection("deals").find().sort({ date_added: -1 }).toArray();
+        const deals = await db.collection("deals").find().toArray();
+
+        // Convertir publishedAt en objet Date et trier par ordre décroissant
+        deals.sort((a, b) => new Date(b.publishedAt * 1000) - new Date(a.publishedAt * 1000));
+
         res.json(deals);
     } catch (error) {
         console.error("❌ Erreur:", error);
@@ -56,7 +60,7 @@ const getSalesForLegoSet = async (req, res) => {
     try {
         const legoSetId = req.params.legoSetId; // Récupérer l'ID du set depuis l'URL
         const db = await connectDB();
-        const sales = await db.collection("sales").find({ lego_set_id: legoSetId }).toArray();
+        const sales = await db.collection("sales").find({ id_lego: legoSetId }).toArray();
         res.json(sales);
     } catch (error) {
         console.error("❌ Erreur:", error);
@@ -64,18 +68,8 @@ const getSalesForLegoSet = async (req, res) => {
     }
 };
 
-// 6️⃣ Trouver les ventes récentes (scrapées il y a moins de 3 semaines)
-const getRecentSales = async (req, res) => {
-    try {
-        const threeWeeksAgo = new Date(new Date().setDate(new Date().getDate() - 21)); // Date actuelle - 21 jours
-        const db = await connectDB();
-        const sales = await db.collection("sales").find({ scraped_date: { $gte: threeWeeksAgo } }).toArray();
-        res.json(sales);
-    } catch (error) {
-        console.error("❌ Erreur:", error);
-        res.status(500).json({ error: "Erreur serveur" });
-    }
-};
+
+
 
 // Export des fonctions pour les utiliser dans les routes
 module.exports = {
@@ -84,5 +78,5 @@ module.exports = {
     getDealsSortedByPrice,
     getDealsSortedByDate,
     getSalesForLegoSet,
-    getRecentSales
+    
 };
