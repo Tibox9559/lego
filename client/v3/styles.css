@@ -1,0 +1,62 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #b22222;
+  color: white;
+  padding: 20px;
+}
+
+.logo {
+  position: absolute;
+  left: 20px;
+  width: 100px;
+  height: auto;
+}
+
+.container {
+  padding: 20px;
+}
+
+.selection-container {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+select,
+button {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #e7bf47;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.deals-container,
+.info-container,
+.sales-container {
+  background: white;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}

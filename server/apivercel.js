@@ -9,6 +9,9 @@ const {
   getDealsSortedByPrice,
   getDealsSortedByDate,
   getSalesForLegoSet,
+  getAllUniqueDealIds,
+  getDealsSortedByTemperature,
+  getAllDealsById
 } = require("./mongodb/methods");
 
 const connectDB = require("./mongodb/mongo");
@@ -28,11 +31,17 @@ app.get("/", (req, res) => {
   res.send({ ack: true });
 });
 
-app.get("/api/best-discounts", getBestDiscountDeals);
-app.get("/api/most-commented", getMostCommentedDeals);
-app.get("/api/deals-by-price", getDealsSortedByPrice);
-app.get("/api/deals-by-date", getDealsSortedByDate);
+app.get("/api/set-id", getAllUniqueDealIds);
+app.get("/api/deals-by-best-discounts/:id", getBestDiscountDeals);
+app.get("/api/deals-by-most-commented/:id", getMostCommentedDeals);
+app.get("/api/deals-by-temperature/:id", getDealsSortedByTemperature);
+app.get("/api/deals-by-price/:id", getDealsSortedByPrice);
+app.get("/api/deals-by-date/:id", getDealsSortedByDate);
+app.get("/api/deals/:id", getAllDealsById);
 app.get("/api/sales/:legoSetId", getSalesForLegoSet);
+
+
+
 
 // ✅ Exporter l'application pour Vercel
 module.exports = app;
