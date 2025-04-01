@@ -23,9 +23,12 @@ async function scrapePage(page) {
                     const deal = JSON.parse(jsonData);
                     if (deal.props && deal.props.thread) {
                         const thread = deal.props.thread;
+
+                        if (thread.isExpired) return; // Ne pas scraper les deals expirés
+
                         const price = thread.price;
                         const nextBestPrice = thread.nextBestPrice;
-                        let discount = null;
+                        let discount = 0;
 
                         if (price && nextBestPrice && nextBestPrice > price) {
                             discount = ((nextBestPrice - price) / nextBestPrice) * 100;
@@ -37,20 +40,26 @@ async function scrapePage(page) {
                         const idMatch = titleSlug.match(/\b\d{5}\b/);
                         const id = idMatch ? idMatch[0] : null;
 
+                        // Génération de l'URL de l'image
+                        const mainImage = thread.mainImage;
+                        const imageUrl = mainImage && mainImage.path && mainImage.name
+                            ? `https://static-pepper.dealabs.com/${mainImage.path}/${mainImage.name}/re/404x404/qt/50/${mainImage.name}.jpg`
+                            : null;
+
                         if (id) {
                             deals.push({
                                 id: id,
                                 threadId: thread.threadId,
                                 titleSlug: titleSlug,
                                 commentCount: thread.commentCount,
-                                isExpired: thread.isExpired,
                                 temperature: thread.temperature,
                                 publishedAt: thread.publishedAt,
                                 link: thread.link,
                                 merchantName: thread.merchant ? thread.merchant.merchantName : null,
                                 price: price,
                                 nextBestPrice: nextBestPrice,
-                                discount: discount
+                                discount: discount,
+                                image: imageUrl
                             });
                         }
                     }

@@ -1,46 +1,68 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vinted Deals</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <header>
-        <img src="logo.png" alt="Logo" class="logo">
-        <h1>We find the best deals for you !</h1>
+      <img src="logo.png" alt="Logo" class="logo" />
+      <h1>We find the best deals for you !</h1>
     </header>
-    
+
     <div class="container">
-        <div class="selection-container">
-            <select id="setId">
-                <option>Set ID</option>
-            </select>
-            <select id="show">
-                <option>Show</option>
-            </select>
-            <select id="goToPage">
-                <option>Go to Page</option>
-            </select>
-            <select id="filter">
-                <option>Filter</option>
-            </select>
-        </div>
-        
-        <button>Find the Best Deals</button>
-        
+      <div class="selection-container">
+        <select id="setId">
+          <option>Set ID</option>
+        </select>
+        <select id="show">
+          <option>Show</option>
+          <option value="5">5 deals</option>
+          <option value="10">10 deals</option>
+          <option value="20">20 deals</option>
+        </select>
+        <select id="goToPage">
+          <option>Go to Page</option>
+        </select>
+        <select id="filter">
+          <option value="">Filter</option>
+          <option value="best-discounts">Best Discounts</option>
+          <option value="most-commented">Most Commented</option>
+          <option value="temperature">Highest Temperature</option>
+          <option value="price">Lowest Price</option>
+          <option value="date">Newest Deals</option>
+        </select>
+      </div>
+
+      <button>Find the Best Deals</button>
+
+      <div class="main-content">
         <div class="deals-container">
-            <h2>Deals</h2>
+          <h2>Deals</h2>
         </div>
-        
         <div class="info-container">
-            <h2>Vinted Resell Market</h2>
+          <h2>Vinted Resell Market Information</h2>
         </div>
-        
-        <div class="sales-container">
-            <h2>Sales</h2>
-        </div>
+      </div>
+
+      <div class="sales-container">
+        <h2>Corresponding Sales</h2>
+      </div>
     </div>
-</body>
+    <div id="popup-overlay" class="hidden">
+      <div id="popup-content">
+        <button id="close-popup">X</button>
+        <div class="best-deals-container">
+          <h2>Top 10 Best Deals</h2>
+          <h3>"The calculations of the best possible profitability were carried out on the latest dealabs scrap on:
+            These calculations reflect the market trend, discount and parameters such as publication date, temperature and number of comments. These data lead to this classification." The Lego Purchase Resarch</h3>
+          <div id="best-deals"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="utils.js"></script>
+  </body>
 </html>

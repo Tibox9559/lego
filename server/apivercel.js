@@ -11,7 +11,9 @@ const {
   getSalesForLegoSet,
   getAllUniqueDealIds,
   getDealsSortedByTemperature,
-  getAllDealsById
+  getAllDealsById,
+  getAllDeals,
+  getAllSales
 } = require("./mongodb/methods");
 
 const connectDB = require("./mongodb/mongo");
@@ -38,6 +40,8 @@ app.get("/api/deals-by-temperature/:id", getDealsSortedByTemperature);
 app.get("/api/deals-by-price/:id", getDealsSortedByPrice);
 app.get("/api/deals-by-date/:id", getDealsSortedByDate);
 app.get("/api/deals/:id", getAllDealsById);
+app.get("/api/deals", getAllDeals);
+app.get("/api/sales", getAllSales);
 app.get("/api/sales/:legoSetId", getSalesForLegoSet);
 
 

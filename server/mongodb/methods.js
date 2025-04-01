@@ -146,6 +146,26 @@ const getAllDealsById = async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 };
+const getAllDeals = async (req, res) => {
+    try {
+        const db = await connectDB();
+        const deals = await db.collection("deals").find().toArray();
+        res.json(deals);
+    } catch (error) {
+        console.error("❌ Erreur:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+};
+const getAllSales = async (req, res) => {
+    try {
+        const db = await connectDB();
+        const sales = await db.collection("sales").find().toArray();
+        res.json(sales);
+    } catch (error) {
+        console.error("❌ Erreur:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+};
 
 
 // Export des fonctions pour les utiliser dans les routes
@@ -157,5 +177,7 @@ module.exports = {
     getDealsSortedByTemperature,
     getSalesForLegoSet,
     getAllUniqueDealIds,
-    getAllDealsById
+    getAllDealsById,
+    getAllDeals,
+    getAllSales
 };

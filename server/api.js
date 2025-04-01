@@ -9,6 +9,7 @@ const {
   getDealsSortedByPrice,
   getDealsSortedByDate,
   getSalesForLegoSet,
+  ge
   
 } = require("./mongodb/methods"); // Import des méthodes
 const connectDB = require("./mongodb/mongo"); // Importer la connexion MongoDB

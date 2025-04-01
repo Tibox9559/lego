@@ -25,7 +25,7 @@ async function insertDeals() {
     // Insérer les données dans MongoDB
     const result = await collection.insertMany(deals);
 
-    console.log(`✅ ${result.insertedCount} deals insérés avec succès !`);
+    console.log(`✅ ${result.insertedCount} sales insérés avec succès !`);
     client.close();
   } catch (error) {
     console.error("❌ Erreur lors de l'insertion des deals :", error);
