@@ -67,9 +67,9 @@ function displayDeals(deals) {
       card.innerHTML = `
                 <h3 class="deal-title">${deal.titleSlug}</h3>
                 <img src="${deal.image}" alt="Lego Set Image"/>
-                <p><strong>Comments:</strong> ${deal.commentCount}</p>
-                <p><strong>Temperature:</strong> ${deal.temperature}</p>
-                <p><strong>Price:</strong> ${deal.price} € <span class="discount">(-${deal.discount}%)</span></p>
+                <p><strong>👁️ Comments:</strong> ${deal.commentCount}</p>
+                <p><strong>🌡️ Temperature:</strong> ${deal.temperature}</p>
+                <p><strong>💰 Price:</strong> ${deal.price} € <span class="discount">(-${deal.discount}%)</span></p>
                 <a href="${deal.link}" target="_blank" class="btn-details">Details</a>
                 <p class="publish-date">Published on: ${formattedDate}</p>
             `;
@@ -237,7 +237,7 @@ async function loadSalesBySetId(setId) {
     }
 
     const salesData = await response.json();
-    console.log(salesData);
+
     const salesCount = salesData.length;
 
     // Calculer les indicateurs de prix
@@ -346,9 +346,6 @@ async function fetchAllDeals() {
       // Ajouter ensuite l'élément courant
       bestDeals2.push(deal);
     }
-
-    console.log("bestDeals:", bestDeals);
-    console.log("bestDeals2:", bestDeals2);
 
     displayBestDeals(bestDeals2.slice(0, 10));
   } catch (error) {

@@ -8,13 +8,23 @@ const getPagination = (req) => {
     return { limit, skip };
 };
 
+// Fonction générique pour récupérer la base de données
+let db;
+const getDB = async () => {
+    if (!db) {
+        db = await connectDB();
+    }
+    return db;
+};
+
 // 1️⃣ Trouver les meilleures réductions pour un ID donné
 const getBestDiscountDeals = async (req, res) => {
     try {
         const { limit, skip } = getPagination(req);
-        const dealId = req.params.id; // ID du deal en string
-        const db = await connectDB();
-        const deals = await db.collection("deals").find({ id: dealId }) // 🔹 Filtrer sur `id` au lieu de `_id`
+        const dealId = req.params.id;
+        const db = await getDB();
+        const deals = await db.collection("deals")
+            .find({ id: dealId })
             .sort({ discount: -1 })
             .skip(skip)
             .limit(limit)
@@ -31,8 +41,9 @@ const getMostCommentedDeals = async (req, res) => {
     try {
         const { limit, skip } = getPagination(req);
         const dealId = req.params.id;
-        const db = await connectDB();
-        const deals = await db.collection("deals").find({ id: dealId })
+        const db = await getDB();
+        const deals = await db.collection("deals")
+            .find({ id: dealId })
             .sort({ commentCount: -1 })
             .skip(skip)
             .limit(limit)
@@ -49,8 +60,9 @@ const getDealsSortedByPrice = async (req, res) => {
     try {
         const { limit, skip } = getPagination(req);
         const dealId = req.params.id;
-        const db = await connectDB();
-        const deals = await db.collection("deals").find({ id: dealId })
+        const db = await getDB();
+        const deals = await db.collection("deals")
+            .find({ id: dealId })
             .sort({ price: 1 })
             .skip(skip)
             .limit(limit)
@@ -67,13 +79,14 @@ const getDealsSortedByDate = async (req, res) => {
     try {
         const { limit, skip } = getPagination(req);
         const dealId = req.params.id;
-        const db = await connectDB();
-        const deals = await db.collection("deals").find({ id: dealId })
+        const db = await getDB();
+        const deals = await db.collection("deals")
+            .find({ id: dealId })
             .skip(skip)
             .limit(limit)
             .toArray();
         
-        // Convertir `publishedAt` en objet Date et trier par ordre décroissant
+        // Trier par ordre décroissant en convertissant `publishedAt`
         deals.sort((a, b) => new Date(b.publishedAt * 1000) - new Date(a.publishedAt * 1000));
 
         res.json(deals);
@@ -88,8 +101,9 @@ const getDealsSortedByTemperature = async (req, res) => {
     try {
         const { limit, skip } = getPagination(req);
         const dealId = req.params.id;
-        const db = await connectDB();
-        const deals = await db.collection("deals").find({ id: dealId })
+        const db = await getDB();
+        const deals = await db.collection("deals")
+            .find({ id: dealId })
             .sort({ temperature: -1 })
             .skip(skip)
             .limit(limit)
@@ -104,10 +118,11 @@ const getDealsSortedByTemperature = async (req, res) => {
 // 6️⃣ Trouver les ventes pour un set LEGO donné
 const getSalesForLegoSet = async (req, res) => {
     try {
-        const legoSetId = req.params.legoSetId; // Récupérer l'ID du set depuis l'URL
+        const legoSetId = req.params.legoSetId;
         const { limit, skip } = getPagination(req);
-        const db = await connectDB();
-        const sales = await db.collection("sales").find({ id_lego: legoSetId })
+        const db = await getDB();
+        const sales = await db.collection("sales")
+            .find({ id_lego: legoSetId })
             .skip(skip)
             .limit(limit)
             .toArray();
@@ -121,8 +136,8 @@ const getSalesForLegoSet = async (req, res) => {
 // 7️⃣ Récupérer tous les IDs uniques des deals
 const getAllUniqueDealIds = async (req, res) => {
     try {
-        const db = await connectDB();
-        const dealIds = await db.collection("deals").distinct("id"); // 🔹 Récupérer les IDs uniques
+        const db = await getDB();
+        const dealIds = await db.collection("deals").distinct("id");
         res.json(dealIds);
     } catch (error) {
         console.error("❌ Erreur:", error);
@@ -134,9 +149,10 @@ const getAllUniqueDealIds = async (req, res) => {
 const getAllDealsById = async (req, res) => {
     try {
         const { limit, skip } = getPagination(req);
-        const dealId = req.params.id; // ID du deal en string
-        const db = await connectDB();
-        const deals = await db.collection("deals").find({ id: dealId }) // Filtrer par `id`
+        const dealId = req.params.id;
+        const db = await getDB();
+        const deals = await db.collection("deals")
+            .find({ id: dealId })
             .skip(skip)
             .limit(limit)
             .toArray();
@@ -146,9 +162,11 @@ const getAllDealsById = async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 };
+
+// 🔹 Récupérer tous les deals
 const getAllDeals = async (req, res) => {
     try {
-        const db = await connectDB();
+        const db = await getDB();
         const deals = await db.collection("deals").find().toArray();
         res.json(deals);
     } catch (error) {
@@ -156,9 +174,11 @@ const getAllDeals = async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 };
+
+// 🔹 Récupérer toutes les ventes
 const getAllSales = async (req, res) => {
     try {
-        const db = await connectDB();
+        const db = await getDB();
         const sales = await db.collection("sales").find().toArray();
         res.json(sales);
     } catch (error) {
@@ -167,8 +187,7 @@ const getAllSales = async (req, res) => {
     }
 };
 
-
-// Export des fonctions pour les utiliser dans les routes
+// ✅ Exporter les fonctions pour les routes
 module.exports = {
     getBestDiscountDeals,
     getMostCommentedDeals,

@@ -80,7 +80,6 @@ button:hover {
   padding: 20px;
 }
 
-
 .sales-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -105,9 +104,9 @@ button:hover {
 }
 .deals-container h2,
 .sales-container h2 {
-    grid-column: 1 / -1; /* Fait que le titre prend toute la largeur */
-    text-align: center; /* Centre le texte du titre */
-    margin-bottom: 20px; /* Ajoute de l'espace entre le titre et les cartes */
+  grid-column: 1 / -1; /* Fait que le titre prend toute la largeur */
+  text-align: center; /* Centre le texte du titre */
+  margin-bottom: 20px; /* Ajoute de l'espace entre le titre et les cartes */
 }
 
 /* ============================= STYLE DES CARTES ============================== */
@@ -256,16 +255,16 @@ button:hover {
 /* ============================= RESPONSIVE ============================== */
 @media (max-width: 900px) {
   .deals-container {
-      grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
   .deals-container {
-      grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
   }
   .sales-container {
-      grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
   }
 }
 .info-container {
@@ -274,4 +273,15 @@ button:hover {
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
+}
+.icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 5px;
+}
+
+.icon svg {
+  width: 16px;
+  height: 16px;
+  color: #666;
 }
